@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventkalender 2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .day {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            cursor: pointer;
+            position: relative;
+        }
+        .day.locked {
+            background-color: #dcdcdc;
+            cursor: not-allowed;
+        }
+        .day span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .day .content {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            z-index: 10;
+        }
+        #login {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth(); // Month index (0 = January)
+            const today = currentDate.getDate();
+
+            const calendarDays = document.querySelectorAll(".day");
+            const loginButton = document.getElementById("login-button");
+            const loginModal = document.getElementById("login");
+            const passwordInput = document.getElementById("password");
+            const loginSubmit = document.getElementById("login-submit");
+
+            let isAuthenticated = false;
+
+            loginButton.addEventListener("click", () => {
+                loginModal.style.display = "block";
+            });
+
+            loginSubmit.addEventListener("click", () => {
+                const password = passwordInput.value;
+                if (password === "advent2024") {
+                    isAuthenticated = true;
+                    loginModal.style.display = "none";
+                    alert("Erfolgreich eingeloggt! Sie können nun die Türchen öffnen.");
+                } else {
+                    alert("Falsches Passwort! Versuche es erneut.");
+                }
+            });
+
+            calendarDays.forEach((day) => {
+                const dayNumber = parseInt(day.dataset.day);
+                if (currentYear === 2024 && currentMonth === 11 && dayNumber <= today) {
+                    day.classList.remove("locked");
+                }
+
+                day.addEventListener("click", () => {
+                    if (!day.classList.contains("locked") && isAuthenticated) {
+                        const content = day.querySelector(".content");
+                        if (content.style.display === "none") {
+                            content.style.display = "block";
+                        } else {
+                            content.style.display = "none";
+                        }
+                    } else if (!isAuthenticated) {
+                        alert("Bitte loggen Sie sich ein, um das Türchen zu öffnen.");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Adventkalender 2024</h1>
+    <button id="login-button">Login</button>
+    <div id="login">
+        <h2>Login</h2>
+        <input type="password" id="password" placeholder="Passwort eingeben" />
+        <button id="login-submit">Einloggen</button>
+    </div>
+    <div class="calendar">
+        <!-- Repeat for 24 days -->
+        <div class="day locked" data-day="01">
+            <span>01</span>
+            <div class="content">🎁 Überraschung für den 01. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="02">
+            <span>02</span>
+            <div class="content">🎁 Überraschung für den 02. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="03">
+            <span>03</span>
+            <div class="content">🎁 Überraschung für den 03. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="04">
+            <span>04</span>
+            <div class="content">🎁 Überraschung für den 04. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="05">
+            <span>05</span>
+            <div class="content">🎁 Überraschung für den 05. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="06">
+            <span>06</span>
+            <div class="content">🎁 Überraschung für den 06. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="07">
+            <span>07</span>
+            <div class="content">🎁 Überraschung für den 07. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="08">
+            <span>08</span>
+            <div class="content">🎁 Überraschung für den 08. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="09">
+            <span>09</span>
+            <div class="content">🎁 Überraschung für den 09. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="10">
+            <span>10</span>
+            <div class="content">🎁 Überraschung für den 10. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="11">
+            <span>11</span>
+            <div class="content">🎁 Überraschung für den 11. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="12">
+            <span>12</span>
+            <div class="content">🎁 Überraschung für den 12. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="13">
+            <span>13</span>
+            <div class="content">🎁 Überraschung für den 13. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="14">
+            <span>14</span>
+            <div class="content">🎁 Überraschung für den 14. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="15">
+            <span>15</span>
+            <div class="content">🎁 Überraschung für den 15. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="16">
+            <span>16</span>
+            <div class="content">🎁 Überraschung für den 16. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="17">
+            <span>17</span>
+            <div class="content">🎁 Überraschung für den 17. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="18">
+            <span>18</span>
+            <div class="content">🎁 Überraschung für den 18. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="19">
+            <span>19</span>
+            <div class="content">🎁 Überraschung für den 19. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="20">
+            <span>20</span>
+            <div class="content">🎁 Überraschung für den 20. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="21">
+            <span>21</span>
+            <div class="content">🎁 Überraschung für den 21. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="22">
+            <span>22</span>
+            <div class="content">🎁 Überraschung für den 22. Dezember!</div>
+        </div>
+        <div class="day locked" data-day="23">
+            <span>23</span>
+            <div class="content">🎁 Überraschung für den 23. Dezember!</div>
+        </div>				
+        <div class="day locked" data-day="24">
+            <span>24</span>
+            <div class="content">🎄 Frohe Weihnachten!</div>
+        </div>
+    </div>
+</body>
+</html>
