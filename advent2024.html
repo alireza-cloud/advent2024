@@ -1,244 +1,100 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adventkalender 2024</title>
-    <style>
-        body {
-            background-image: url('Bild.jpg'); /* Pfad zum Bild */
-            background-size: cover; /* Bild an den gesamten Bildschirm anpassen */
-            background-position: center center; /* Bild in der Mitte positionieren */
-            background-attachment: fixed; /* Bild bleibt beim Scrollen fixiert */
-            margin: 0;
-            font-family: Arial, sans-serif;            
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        .day {
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            /*background-color: #fff;*/
-            background-color: rgba(220, 220, 220, 0.1);
-            cursor: pointer;
-            position: relative;
-        }
-        .day.locked {
-            /*background-color: #dcdcdc;*/
-            color: white;
-            background-color: rgba(220, 220, 220, 0.2);
-            cursor: not-allowed;
-        }
-        .day span {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .day .content {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ffffff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 10;
-        }
-        #login {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ffffff;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ffffff;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);            
-        }
-        h1 {
-            color: white;           /* Changes the header color to white */
-            background-color: black; /* Optional: sets background color to black */
-            font-size: 50px;         /* Makes the font size bigger */
-        }        
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth(); // Month index (0 = January)
-            const today = currentDate.getDate();
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VärVär 2024</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
 
-            const calendarDays = document.querySelectorAll(".day");
-            const loginButton = document.getElementById("login-button");
-            const loginModal = document.getElementById("login");
-            const passwordInput = document.getElementById("password");
-            const loginSubmit = document.getElementById("login-submit");
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-            let isAuthenticated = false;
+    h1 {
+      text-align: center;
+      color: #333;
+    }
 
-            loginButton.addEventListener("click", () => {
-                loginModal.style.display = "block";
-                loginModal.style.zIndex = "1000";
-            });
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
 
-            loginSubmit.addEventListener("click", () => {
-                const password = passwordInput.value;
-                if (password === "lasse") {
-                    isAuthenticated = true;
-                    loginModal.style.display = "none";
-                    alert("Erfolgreich eingeloggt! Vevivär.");
-                } else {
-                    alert("Falsches Passwort! Deppertvär.");
-                }
-            });
+    li {
+      background-color: #e0e0e0;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-            calendarDays.forEach((day) => {
-                const dayNumber = parseInt(day.dataset.day);
-                if (currentYear === 2024 && currentMonth === 11 && dayNumber <= today) {
-                    day.classList.remove("locked");
-                }
+    li:hover {
+      background-color: #ff8c00;
+      color: white;
+      transform: scale(1.05);
+    }
 
-                day.addEventListener("click", () => {
-                    if (!day.classList.contains("locked") && isAuthenticated) {
-                        const content = day.querySelector(".content");
-                        if (content.style.display === "none") {
-                            content.style.display = "block";
-                        } else {
-                            content.style.display = "none";
-                        }
-                    } else if (!isAuthenticated) {
-                        alert("Vevivär log Dich ein hoida.");
-                    }
-                });
-            });
-        });
-    </script>
+    li.active {
+      background-color: #008080;
+      color: white;
+    }
+
+  </style>
 </head>
 <body>
-    <h1>Vuvi Värs Adventkalender 2024</h1>
-    <button id="login-button">Login</button>
-    <div id="login">
-        <h2>Login</h2>
-        <input type="password" id="password" placeholder="Passwort eingeben" />
-        <button id="login-submit">Einloggen</button>
-    </div>
-    <div class="calendar">
-        <!-- Repeat for 24 days -->
-        <div class="day locked" data-day="01">
-            <span>Vuvivär 01</span>
-            <div class="content">🎁 In das Lokal deiner Wahl gemeinsam Essen gehen</div>
-        </div>
-        <div class="day locked" data-day="02">
-            <span>Darlingvär 02</span>
-            <div class="content">🎁 Gemma zum Paco</div>
-        </div>
-        <div class="day locked" data-day="03">
-            <span>laafvär 03</span>
-            <div class="content">🎁 Gemma El Gaucho</div>
-        </div>
-        <div class="day locked" data-day="04">
-            <span>Allesvär 04</span>
-            <div class="content">🎁 Gemma ULRICH</div>
-        </div>
-        <div class="day locked" data-day="05">
-            <span>Schatzvär 05</span>
-            <div class="content">🎁 Gemma Krazy Kitchen</div>
-        </div>
-        <div class="day locked" data-day="06">
-            <span>Bonivär 06</span>
-            <div class="content">🎁 Gemma auf a Kaffee</div>
-        </div>
-        <div class="day locked" data-day="07">
-            <span>Laafvär 07</span>
-            <div class="content">🎁 Gemma Badminton spielen</div>
-        </div>
-        <div class="day locked" data-day="08">
-            <span>vuppsoidavär 08</span>
-            <div class="content">🎁 Gemma auf a Long Drive</div>
-        </div>
-        <div class="day locked" data-day="09">
-            <span>Neinvär 09</span>
-            <div class="content">🎁 Gemma Kebab essen</div>
-        </div>
-        <div class="day locked" data-day="10">
-            <span>Värvär10</span>
-            <div class="content">🎁 Gemma Schwimmen</div>
-        </div>
-        <div class="day locked" data-day="11">
-            <span>Oidavär 11</span>
-            <div class="content">🎁 Gemma Rinderwahn</div>
-        </div>
-        <div class="day locked" data-day="12">
-            <span>Jaanvär 12</span>
-            <div class="content">🎁 Gemma Brunchen</div>
-        </div>
-        <div class="day locked" data-day="13">
-            <span>Dilbarvär 13</span>
-            <div class="content">🎁 Masaaaaaajeeee</div>
-        </div>
-        <div class="day locked" data-day="14">
-            <span>Maacherivär 14</span>
-            <div class="content">🎁 In den Lindt Laden gehen</div>
-        </div>
-        <div class="day locked" data-day="15">
-            <span>Makupinvär 15</span>
-            <div class="content">🎁 Ein Buch deiner Wahl kaufen</div>
-        </div>
-        <div class="day locked" data-day="16">
-            <span>Ronvär 16</span>
-            <div class="content">🎁 1x Ikea für dich</div>
-        </div>
-        <div class="day locked" data-day="17">
-            <span>Harryvär 17</span>
-            <div class="content">🎁 1x Eiweißdose deiner Wahl</div>
-        </div>
-        <div class="day locked" data-day="18">
-            <span>Dumbeldorvär 18</span>
-            <div class="content">🎁 Nichts da</div>
-        </div>
-        <div class="day locked" data-day="19">
-            <span>Harmainivär 19</span>
-            <div class="content">🎁 Kuchen deiner Wahl</div>
-        </div>
-        <div class="day locked" data-day="20">
-            <span>Snapvär 20</span>
-            <div class="content">🎁 Hendlsupppn fia di</div>
-        </div>
-        <div class="day locked" data-day="21">
-            <span>Harrystylesvär 21</span>
-            <div class="content">🎁 Masaaaaaaajjjjeeeee</div>
-        </div>
-        <div class="day locked" data-day="22">
-            <span>Schwimmvär 22</span>
-            <div class="content">🎁 Nichts da oida</div>
-        </div>
-        <div class="day locked" data-day="23">
-            <span>Gymvär 23</span>
-            <div class="content">🎁 1x Veganista</div>
-        </div>				
-        <div class="day locked" data-day="24">
-            <span>Christmasvär 24</span>
-            <div class="content">🎄 Frohe Weihnachten! Vevivär</div>
-        </div>
-    </div>
+
+  <div class="container">
+    <h1>VärVär 2024</h1>
+    <ul>
+      <li>In das Lokal deiner Wahl gemeinsam Essen gehen</li>
+      <li>Gemma zum Paco</li>
+      <li>Gemma El Gaucho</li>
+      <li>Gemma ULRICH</li>
+      <li>Gemma Krazy Kitchen</li>
+      <li>Gemma auf a Kaffee</li>
+      <li>Gemma Badminton spielen</li>
+      <li>Gemma auf a Long Drive</li>
+      <li>Gemma Kebab essen</li>
+      <li>Gemma Schwimmen</li>
+      <li>Gemma Rinderwahn</li>
+      <li>Gemma Brunchen</li>
+      <li>Masaaaaaajeeee</li>
+      <li>In den Lindt Laden gehen</li>
+      <li>Ein Buch deiner Wahl kaufen</li>
+      <li>1x Ikea für dich</li>
+      <li>1x Eiweißdose deiner Wahl</li>
+      <li>Nichts da</li>
+      <li>Kuchen deiner Wahl</li>
+      <li>Hendlsupppn fia di</li>
+      <li>Masaaaaaaajjjjeeeee</li>
+      <li>Nichts da oida</li>
+      <li>1x Veganista</li>
+      <li>Frohe Weihnachten! Vevivär</li>
+    </ul>
+  </div>
+
+  <script>
+    // Add interactive functionality
+    const listItems = document.querySelectorAll('li');
+    
+    listItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('active');
+      });
+    });
+  </script>
+  
 </body>
 </html>
