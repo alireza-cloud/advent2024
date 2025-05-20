@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Zufälliger Prozentaufschlag (8% - 20%)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    textarea, button {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 60%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Zufälliger Prozentaufschlag (8% - 20%)</h2>
+
+  <label for="numberInput">Zahlen (eine pro Zeile):</label>
+  <textarea id="numberInput" rows="15" placeholder="z. B.&#10;54&#10;56&#10;45&#10;..."></textarea>
+  <button onclick="processNumbers()">Prozent aufschlagen</button>
+
+  <table id="resultTable" style="display: none;">
+    <thead>
+      <tr>
+        <th>Original</th>
+        <th>% Aufschlag</th>
+        <th>Neuer Wert</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    function processNumbers() {
+      const input = document.getElementById('numberInput').value;
+      const lines = input.split('\n').map(line => parseFloat(line.trim())).filter(n => !isNaN(n));
+      const tbody = document.querySelector('#resultTable tbody');
+      tbody.innerHTML = '';
+
+      if (lines.length === 0) {
+        alert('Bitte gib gültige Zahlen ein (eine pro Zeile).');
+        return;
+      }
+
+      lines.forEach(original => {
+        const percentage = Math.random() * (20 - 8) + 8;
+        const rawValue = original + (original * (percentage / 100));
+        const newValue = Math.ceil(rawValue); // Auf 2 Nachkommastellen aufrunden
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${original}</td>
+          <td>${percentage.toFixed(2)}%</td>
+          <td>${newValue.toFixed(0)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('resultTable').style.display = 'table';
+    }
+  </script>
+
+</body>
+</html>
