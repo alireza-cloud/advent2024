@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8">
   <title>Zufälliger Prozentaufschlag (8% - 20%) + Manuelle Berechnung</title>
@@ -8,39 +9,66 @@
       font-family: Arial, sans-serif;
       margin: 30px;
     }
-    textarea, input, select, button {
+
+    textarea,
+    input,
+    select,
+    button {
       padding: 10px;
       font-size: 16px;
       margin-bottom: 10px;
       display: block;
       width: 300px;
+      box-sizing: border-box;
     }
+
     table {
       width: 60%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-    th, td {
+
+    th,
+    td {
       padding: 10px;
       border: 1px solid #ccc;
       text-align: center;
     }
+
     th {
       background-color: #f2f2f2;
     }
+
     #manualOutput {
       font-weight: bold;
       font-size: 18px;
       margin-top: 10px;
     }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
   </style>
 </head>
-<body>
 
+<body>
   <h2>Zufälliger Prozentaufschlag (8% - 20%)</h2>
 
   <label for="numberInput">Zahlen (eine pro Zeile):</label>
-  <textarea id="numberInput" rows="15" placeholder="z. B.&#10;54&#10;56&#10;45&#10;..."></textarea>
+  <textarea id="numberInput" rows="15" placeholder="z. B.
+54
+56
+45
+..."></textarea>
+
+
+
+  <label for="min">Von (%):</label>
+  <input type="number" id="min" placeholder="z. B. 8" value="8" min="0" max="100">
+  <label for="max">Bis (%):</label>
+  <input type="number" id="max" placeholder="z. B. 20" value="20" min="0" max="100">
+
   <button onclick="processNumbers()">Prozent aufschlagen</button>
 
   <table id="resultTable" style="display: none;">
@@ -58,31 +86,62 @@
 
   <h2>Manuelle Prozentrechnung</h2>
   <label for="singleValue">Zahl eingeben:</label>
-  <input type="number" id="singleValue" placeholder="z. B. 100">
+  <input type="number" id="singleValue" placeholder="z. B. 100" min="0">
 
   <label for="percentInput">Prozentsatz auswählen:</label>
   <input type="number" id="percentInput" min="1" max="100" value="10">
 
   <button onclick="manualCalculation()">Berechne neuen Wert</button>
-
+  <div id="fetchOutput" class="output"> </div>
   <div id="manualOutput"></div>
+  <div id="errorOutput" class="error"></div>
+  
+  <button onclick="fetchAndUseUserId()">Daten von URL laden</button>
+  <input type="URL" id="URL">
+  <div id="fetchOutput" class="output"> </div>
+  <div id="manualOutput"></div>
+  <div id="errorOutput" class="error"></div>
 
   <script>
+    function adjustInputWidth() {
+      const urlInput = document.getElementById('URL');
+      const textLength = urlInput.value.length || urlInput.placeholder.length;
+
+      // Annahme: 1 Zeichen ≈ 8px (kann je nach Schriftart angepasst werden)
+      const newWidth = Math.max(200, Math.min(600, textLength * 8));
+      urlInput.style.width = `${newWidth}px`;
+    }
+
+    // Event-Listener für Eingabe und beim Laden der Seite
+    const urlInput = document.getElementById('URL');
+    urlInput.addEventListener('input', adjustInputWidth);
+    window.addEventListener('load', adjustInputWidth); // Breite basierend auf Placeholder initial setzen
+
     function processNumbers() {
       const input = document.getElementById('numberInput').value;
+      const minPerc = parseFloat(document.getElementById('min').value);
+      const maxPerc = parseFloat(document.getElementById('max').value);
+      const errorOutput = document.getElementById('errorOutput');
+      errorOutput.textContent = '';
+
+      if (isNaN(minPerc) || isNaN(maxPerc) || minPerc < 0 || maxPerc < 0 || minPerc > maxPerc) {
+        errorOutput.textContent = 'Bitte gib gültige Prozentwerte ein (min ≤ max, beide ≥ 0).';
+        return;
+      }
+
       const lines = input.split('\n').map(line => parseFloat(line.trim())).filter(n => !isNaN(n));
       const tbody = document.querySelector('#resultTable tbody');
       tbody.innerHTML = '';
 
       if (lines.length === 0) {
-        alert('Bitte gib gültige Zahlen ein (eine pro Zeile).');
+        errorOutput.textContent = 'Bitte gib gültige Zahlen ein (eine pro Zeile).';
         return;
       }
 
       lines.forEach(original => {
-        const percentage = Math.random() * (20 - 8) + 8;
+        const percentage = Math.random() * (maxPerc - minPerc) + minPerc;
         const rawValue = original + (original * (percentage / 100));
-        const newValue = Math.ceil(rawValue); // Ganze Zahl, aufgerundet
+        const newValue = Math.ceil(rawValue);
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -100,16 +159,43 @@
       const value = parseFloat(document.getElementById('singleValue').value);
       const percent = parseFloat(document.getElementById('percentInput').value);
       const output = document.getElementById('manualOutput');
+      const errorOutput = document.getElementById('errorOutput');
+      errorOutput.textContent = '';
 
-      if (isNaN(value) || isNaN(percent) || percent < 1 || percent > 100) {
-        output.textContent = "Bitte gib eine gültige Zahl und einen Prozentwert (1–100) ein.";
+      if (isNaN(value) || isNaN(percent) || percent < 1 || percent > 100 || value < 0) {
+        errorOutput.textContent = 'Bitte gib eine gültige Zahl und einen Prozentwert (1–100) ein.';
         return;
       }
 
-      const result = Math.ceil(value - (value * (percent / 100)));
-      output.textContent = `Ergebnis: ${value} - ${percent}% = ${result}`;
+      const result = Math.ceil(value + (value * (percent / 100)));
+      output.textContent = `Ergebnis: ${value} + ${percent}% = ${result}`;
+    }
+
+    async function fetchAndUseUserId() {
+      const errorOutput = document.getElementById('errorOutput');
+      const fetchOutput = document.getElementById('fetchOutput');
+      errorOutput.textContent = '';
+      fetchOutput.textContent = '';
+
+      try {
+
+        const input = document.getElementById('URL').value;
+        const response = await fetch(input);
+        if (!response.ok) throw new Error('Fehler beim Laden der Daten!');
+        const data = await response.json();
+
+        if (typeof data.title !== 'undefined') {
+          fetchOutput.textContent = `Gefetchtes title: ${data.title}`;
+          // Optionally, still add to numberInput if desired
+          //document.getElementById('numberInput').value = data.title;
+        } else {
+          errorOutput.textContent = 'Kein gültiges "title"-Feld in der Antwort!';
+        }
+      } catch (err) {
+        errorOutput.textContent = 'Fehler beim Laden: ' + err.message;
+      }
     }
   </script>
-
 </body>
+
 </html>
